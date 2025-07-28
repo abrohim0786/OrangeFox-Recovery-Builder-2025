@@ -102,10 +102,26 @@ jobs:
 
     - name: Clone Device Tree
       run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_12.1
-    git clone https://github.com/abrohim0786/ofox_device_xiaomi_ares.git -b TWRP-12.1 ./device/xiaomi/ares
-    cd ./device/xiaomi/ares
-    echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
+        inputs:
+  MANIFEST_BRANCH:
+    description: 'Manifest branch'
+    required: true
+    default: '12.1'
+
+  DEVICE_TREE:
+    description: 'Device tree Git URL'
+    required: true
+    default: 'https://github.com/abrohim0786/ofox_device_xiaomi_ares.git'
+
+  DEVICE_TREE_BRANCH:
+    description: 'Device tree branch'
+    required: true
+    default: 'TWRP-12.1'
+
+  DEVICE_PATH:
+    description: 'Path to device tree'
+    required: true
+    default: 'device/xiaomi/ares'
 
     - name: Check Manifest Branch
       uses: haya14busa/action-cond@v1
@@ -227,4 +243,3 @@ jobs:
         python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ github.event.inputs.LDCHECK }}
         echo "Done checking missing dependencies. Review, and reconfigure your tree."
       continue-on-error: true
-      
