@@ -116,7 +116,7 @@ jobs:
         if_false: lunch omni_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }}image
 
     - name: Deep Clean Recovery Intermediate Files
-       run: |
+      run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
         rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/obj/PACKAGING/recovery_intermediates/
         rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery/
