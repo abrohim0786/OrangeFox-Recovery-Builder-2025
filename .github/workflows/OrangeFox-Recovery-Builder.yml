@@ -72,12 +72,6 @@ jobs:
         echo "Include Recovery Installer: ${{ github.event.inputs.RECOVERY_INSTALLER }}"
         echo "Release recovery.tar For Samsung devices: ${{ github.event.inputs.RECOVERY_TAR }}"
         echo "::endgroup::"
-        
-    - name: Builder Info
-      run: |
-        echo "::group::👷 Builder Identity"
-        echo "Built with ❤️ by: 😄 ツ๛abrohim๛"
-        echo "::endgroup::"
 
     - name: Clean-up
       uses: rokibhasansagar/slimhub_actions@main
