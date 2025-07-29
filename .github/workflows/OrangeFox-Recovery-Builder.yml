@@ -180,7 +180,7 @@ jobs:
       run: |
         if [ ${{ github.event.inputs.RECOVERY_INSTALLER }} = true ]; then
           cd ${{ env.FILE_PATH }}/
-          wget https://github.com/kinguser981/recovery-installer/releases/download/11256427880/recovery-installer.zip
+          wget https://github.com/abrohim0786/recovery-installer/releases/download/11256427880/recovery-installer.zip
           zip -ur recovery-installer.zip ${{ env.RECOVERY_TYPE }}.img
         fi
       continue-on-error: true
