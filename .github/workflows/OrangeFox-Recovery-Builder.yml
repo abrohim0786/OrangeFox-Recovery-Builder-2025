@@ -42,7 +42,7 @@ on:
         required: true
         default: 'system/bin/qseecomd'
       RECOVERY_TAR:
-        description: 'Release recovery.tar For Xiaomi devices'
+        description: 'Release recovery.tar For Samsung devices'
         required: false
         default: false
         type: boolean
@@ -94,7 +94,7 @@ jobs:
       run: |
         mkdir -p ${GITHUB_WORKSPACE}/OrangeFox
         cd ${GITHUB_WORKSPACE}/OrangeFox
-        git config --global user.name "abrohim0786"
+        git config --global user.name "ツ๛abrohim๛"
         git config --global user.email "callofduty.pubg786@gmail.com"
         git clone https://gitlab.com/OrangeFox/sync.git
         cd sync
@@ -114,13 +114,13 @@ jobs:
         cond: ${{ github.event.inputs.MANIFEST_BRANCH == '11.0' || github.event.inputs.MANIFEST_BRANCH == '12.1' }}
         if_true: lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image
         if_false: lunch omni_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }}image
-      
-     - name: Deep Clean Recovery Intermediate Files
+
+    - name: Deep Clean Recovery Intermediate Files
        run: |
-         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-         rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/obj/PACKAGING/recovery_intermediates/
-         rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery/
-         echo "Cleaned recovery intermediate directories"
+        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+        rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/obj/PACKAGING/recovery_intermediates/
+        rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery/
+        echo "Cleaned recovery intermediate directories"
       
     - name: Building OrangeFox
       run: |
@@ -180,7 +180,7 @@ jobs:
       run: |
         if [ ${{ github.event.inputs.RECOVERY_INSTALLER }} = true ]; then
           cd ${{ env.FILE_PATH }}/
-          wget https://github.com/abrohim0786/recovery-installer/releases/download/11256427880/recovery-installer.zip
+          wget https://github.com/kinguser981/recovery-installer/releases/download/11256427880/recovery-installer.zip
           zip -ur recovery-installer.zip ${{ env.RECOVERY_TYPE }}.img
         fi
       continue-on-error: true
