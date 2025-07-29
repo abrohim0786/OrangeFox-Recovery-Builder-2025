@@ -15,11 +15,11 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree'
         required: true
-        default: 'https://github.com/abrohim0786/TWRP_device_xiaomi_ares.git'
+        default: 'https://github.com/abrohim0786/android_device_xiaomi_ares.git'
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch'
         required: true
-        default: 'TWRP_12.1'
+        default: 'ares_12.1'
       DEVICE_PATH:
         description: 'Specify your device path.'
         required: true
@@ -103,7 +103,7 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        git clone https://github.com/abrohim0786/TWRP_device_xiaomi_ares.git -b TWRP-12.1 ./device/xiaomi/ares
+        git clone https://github.com/abrohim0786/android_device_xiaomi_ares.git -b TWRP-12.1 ./device/xiaomi/ares
         cd device/xiaomi/ares
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
