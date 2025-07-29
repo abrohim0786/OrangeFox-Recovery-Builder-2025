@@ -19,7 +19,7 @@ on:
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch'
         required: true
-        default: 'TWRP_12.1'
+        default: 'fox_12.1'
       DEVICE_PATH:
         description: 'Specify your device path.'
         required: true
@@ -72,6 +72,12 @@ jobs:
         echo "Include Recovery Installer: ${{ github.event.inputs.RECOVERY_INSTALLER }}"
         echo "Release recovery.tar For Samsung devices: ${{ github.event.inputs.RECOVERY_TAR }}"
         echo "::endgroup::"
+        
+    - name: Builder Info
+      run: |
+        echo "::group::👷 Builder Identity"
+        echo "Built with ❤️ by: 😄 ツ๛abrohim๛"
+        echo "::endgroup::"
 
     - name: Clean-up
       uses: rokibhasansagar/slimhub_actions@main
@@ -114,6 +120,13 @@ jobs:
         cond: ${{ github.event.inputs.MANIFEST_BRANCH == '11.0' || github.event.inputs.MANIFEST_BRANCH == '12.1' }}
         if_true: lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image
         if_false: lunch omni_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }}image
+      
+     - name: Deep Clean Recovery Intermediate Files
+       run: |
+         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
+         rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/obj/PACKAGING/recovery_intermediates/
+         rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery/
+         echo "Cleaned recovery intermediate directories"
       
     - name: Building OrangeFox
       run: |
