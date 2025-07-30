@@ -128,6 +128,8 @@ jobs:
         set +e
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
+        lunch twrp_ares-eng
+        make clean
         set -e
         ${{ steps.fox_branch.outputs.value }}
 
