@@ -103,7 +103,7 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        git clone https://github.com/abrohim0786/android_device_xiaomi_ares.git -b ares-12.1 ./device/xiaomi/ares
+        git clone https://github.com/abrohim0786/android_device_xiaomi_ares.git -b ares_12.1 ./device/xiaomi/ares
         cd device/xiaomi/ares
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
