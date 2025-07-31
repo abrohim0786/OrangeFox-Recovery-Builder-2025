@@ -15,11 +15,11 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree'
         required: true
-        default: 'https://github.com/abrohim0786/android_device_xiaomi_ares.git'
+        default: 'https://github.com/abrohim0786/Poco-F3-GT-Tree-for-twrp.git'
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch'
         required: true
-        default: 'ares_12.1'
+        default: 'Poco_12.1'
       DEVICE_PATH:
         description: 'Specify your device path.'
         required: true
