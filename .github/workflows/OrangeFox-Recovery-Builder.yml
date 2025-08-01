@@ -126,11 +126,12 @@ jobs:
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
         set +e
+        rm -rf out
+        make clean
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch twrp_ares-eng
-        rm -rf out
-        make clean
+        mka adbd bootimage
         set -e
         ${{ steps.fox_branch.outputs.value }}
 
