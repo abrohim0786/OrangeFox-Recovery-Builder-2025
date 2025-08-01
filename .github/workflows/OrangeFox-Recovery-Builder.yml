@@ -103,7 +103,7 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./device/xiaomi/ares
+        git clone https://github.com/abrohim0786/Poco-F3-GT-Tree-for-twrp.git -b Poco_12.1 ./device/xiaomi/ares
         cd device/xiaomi/ares
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
@@ -113,18 +113,13 @@ jobs:
         sed -i 's/mi_ext //g' BoardConfig.mk
         sed -i 's/BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product mi_ext system_ext/BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext/g' BoardConfig.mk
 
-    - name: Add TeamWin Dependencies
-      run: |
-        mkdir -p ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/.repo/local_manifests
-        cat > ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/.repo/local_manifests/teamwin.xml <<EOF
-        <?xml version="1.0" encoding="UTF-8"?>
-        <manifest>
-          <project name="TeamWin/android_bootable_recovery" path="bootable/recovery" remote="github" revision="android-12.1" />
-          <project name="TeamWin/android_system_vold" path="system/vold" remote="github" revision="android-12.1" />
-        </manifest>
-        EOF
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        repo sync -c --force-sync --no-clone-bundle --no-tags -j$(nproc --all)
+    - name: Check Manifest Branch
+      uses: haya14busa/action-cond@v1
+      id: fox_branch
+      with:
+        cond: ${{ github.event.inputs.MANIFEST_BRANCH == '11.0' || github.event.inputs.MANIFEST_BRANCH == '12.1' }}
+        if_true: lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image
+        if_false: lunch omni_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }}image
 
     - name: Deep Clean Recovery Intermediate Files
       run: |
@@ -141,13 +136,12 @@ jobs:
         make clean
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        export LC_ALL=C
-        lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng
-        m bootimage
+        lunch twrp_ares-eng
+        mka adbd bootimage
         set -e
+        ${{ steps.fox_branch.outputs.value }}
 
-    # Rest of your existing steps remain the same...
-    - name: Set Build Date
+    - name: Set Build Date # Output will be use in Release
       run: |
         echo "BUILD_DATE=$(date +%Y%m%d)" >> $GITHUB_ENV
         DEVICE_TREE_URL="${{ github.event.inputs.DEVICE_TREE }}"
