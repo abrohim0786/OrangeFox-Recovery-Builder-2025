@@ -23,7 +23,7 @@ on:
       DEVICE_PATH:
         description: 'Specify your device path.'
         required: true
-        default: 'device_xiaomi_ares'
+        default: 'device/xiaomi/ares'
       DEVICE_NAME:
         description: 'Specify your Device Codename.'
         required: true
