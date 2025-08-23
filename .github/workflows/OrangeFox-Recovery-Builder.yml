@@ -103,15 +103,9 @@ jobs:
     - name: Clone Device Tree
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        git clone https://github.com/abrohim0786/Poco-F3-GT-Tree-for-twrp.git -b Poco_12.1 ./device/xiaomi/ares
-        cd device/xiaomi/ares
+        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+        cd ${{ github.event.inputs.DEVICE_PATH }}
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
-
-    - name: Fix BoardConfig.mk
-      run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}/device/xiaomi/ares
-        sed -i 's/mi_ext //g' BoardConfig.mk
-        sed -i 's/BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product mi_ext system_ext/BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext/g' BoardConfig.mk
 
     - name: Check Manifest Branch
       uses: haya14busa/action-cond@v1
@@ -120,24 +114,13 @@ jobs:
         cond: ${{ github.event.inputs.MANIFEST_BRANCH == '11.0' || github.event.inputs.MANIFEST_BRANCH == '12.1' }}
         if_true: lunch twrp_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka adbd ${{ github.event.inputs.BUILD_TARGET }}image
         if_false: lunch omni_${{ github.event.inputs.DEVICE_NAME }}-eng && make clean && mka ${{ github.event.inputs.BUILD_TARGET }}image
-
-    - name: Deep Clean Recovery Intermediate Files
-      run: |
-        cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
-        rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/obj/PACKAGING/recovery_intermediates/
-        rm -rf out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery/
-        echo "Cleaned recovery intermediate directories"
       
     - name: Building OrangeFox
       run: |
         cd ${GITHUB_WORKSPACE}/OrangeFox/fox_${{ github.event.inputs.MANIFEST_BRANCH }}
         set +e
-        rm -rf out
-        make clean
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch twrp_ares-eng
-        mka adbd bootimage
         set -e
         ${{ steps.fox_branch.outputs.value }}
 
@@ -190,7 +173,7 @@ jobs:
       run: |
         if [ ${{ github.event.inputs.RECOVERY_INSTALLER }} = true ]; then
           cd ${{ env.FILE_PATH }}/
-          wget https://github.com/abrohim0786/recovery-installer/releases/download/11256427880/recovery-installer.zip
+          wget https://github.com/kinguser981/recovery-installer/releases/download/11256427880/recovery-installer.zip
           zip -ur recovery-installer.zip ${{ env.RECOVERY_TYPE }}.img
         fi
       continue-on-error: true
@@ -233,6 +216,17 @@ jobs:
           Build: ${{ github.event.inputs.MANIFEST_BRANCH }}
           Device: [Device Tree/Branch](${{ env.DEVICE_TREE_URL }}/tree/${{ inputs.DEVICE_TREE_BRANCH }})
           Commit: Most recent [commit](${{ env.DEVICE_TREE_URL }}/commit/${{ env.COMMIT_ID }}) during building.
+          MD5 (img): ${{ env.MD5_IMG }}
+          
+    - name: Run LDCheck
+      run: |
+        cd tools
+        mv -n libneeds ${{ env.FILE_PATH }}/recovery/root/
+        mv -n ldcheck ${{ env.FILE_PATH }}/recovery/root/
+        cd ${{ env.FILE_PATH }}/recovery/root/
+        python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ github.event.inputs.LDCHECK }}
+        echo "Done checking missing dependencies. Review, and reconfigure your tree."
+      continue-on-error: truev.COMMIT_ID }}) during building.
           MD5 (img): ${{ env.MD5_IMG }}
           
     - name: Run LDCheck
