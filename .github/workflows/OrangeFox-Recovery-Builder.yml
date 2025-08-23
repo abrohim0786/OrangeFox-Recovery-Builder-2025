@@ -15,11 +15,11 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree'
         required: true
-        default: 'https://github.com/abrohim0786/Poco-F3-GT-Tree-for-twrp.git'
+        default: 'https://github.com/abrohim0786/F3GT-twrp-tree.git'
       DEVICE_TREE_BRANCH:
         description: 'Custom Recovery Tree Branch'
         required: true
-        default: 'Poco_12.1'
+        default: ''
       DEVICE_PATH:
         description: 'Specify your device path.'
         required: true
