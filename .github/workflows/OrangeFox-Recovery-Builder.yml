@@ -226,8 +226,8 @@ jobs:
         cd ${{ env.FILE_PATH }}/recovery/root/
         python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ github.event.inputs.LDCHECK }}
         echo "Done checking missing dependencies. Review, and reconfigure your tree."
-      continue-on-error: truev.COMMIT_ID }}) during building.
-          MD5 (img): ${{ env.MD5_IMG }}
+        continue-on-error: truev.COMMIT_ID }}) during building.
+        MD5 (img): ${{ env.MD5_IMG }}
           
     - name: Run LDCheck
       run: |
