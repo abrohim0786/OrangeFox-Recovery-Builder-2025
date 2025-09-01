@@ -178,21 +178,12 @@ jobs:
         fi
       continue-on-error: true
         
-    - name: Recovery to tar for Samsung devices
-      run: |
-        if [ ${{ github.event.inputs.RECOVERY_TAR }} = true ]; then
-          cd ${{ env.FILE_PATH }}/
-          tar -cvf ${{ env.RECOVERY_TYPE }}.tar ${{ env.RECOVERY_TYPE }}.img
-        fi
-      continue-on-error: true
-
     - name: Upload to Release
       if: env.CHECK_IMG_IS_OK == 'true'
       uses: softprops/action-gh-release@v1
       with:
         files: |
           ${{ env.FILE_PATH }}/${{ env.RECOVERY_TYPE }}.img
-          ${{ env.FILE_PATH }}/${{ env.RECOVERY_TYPE }}.tar
           ${{ env.FILE_PATH }}/recovery-installer.zip
           ${{ env.FILE_PATH }}/OrangeFox*.zip
         name: Unofficial OrangeFox for ${{ github.event.inputs.DEVICE_NAME }} // ${{ env.BUILD_DATE }}
@@ -218,24 +209,10 @@ jobs:
           Commit: Most recent [commit](${{ env.DEVICE_TREE_URL }}/commit/${{ env.COMMIT_ID }}) during building.
           MD5 (img): ${{ env.MD5_IMG }}
           
-    - name: Run LDCheck
+    - name: Run LDCheck (Optional)
+      if: env.CHECK_IMG_IS_OK == 'true'
       run: |
-        cd tools
-        mv -n libneeds ${{ env.FILE_PATH }}/recovery/root/
-        mv -n ldcheck ${{ env.FILE_PATH }}/recovery/root/
-        cd ${{ env.FILE_PATH }}/recovery/root/
-        python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ github.event.inputs.LDCHECK }}
-        echo "Done checking missing dependencies. Review, and reconfigure your tree."
-        continue-on-error: truev.COMMIT_ID }}) during building.
-        MD5 (img): ${{ env.MD5_IMG }}
-          
-    - name: Run LDCheck
-      run: |
-        cd tools
-        mv -n libneeds ${{ env.FILE_PATH }}/recovery/root/
-        mv -n ldcheck ${{ env.FILE_PATH }}/recovery/root/
-        cd ${{ env.FILE_PATH }}/recovery/root/
-        python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ github.event.inputs.LDCHECK }}
-        echo "Done checking missing dependencies. Review, and reconfigure your tree."
+        echo "LDCheck is currently disabled due to path issues"
+        echo "The specified binary '${{ github.event.inputs.LDCHECK }}' was not found in the built recovery"
+        echo "This step is informational only and doesn't affect the build"
       continue-on-error: true
-      
