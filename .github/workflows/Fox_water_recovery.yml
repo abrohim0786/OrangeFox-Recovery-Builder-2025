@@ -55,10 +55,7 @@ on:
 jobs:
   build:
     name: Build OFRP by ${{ github.actor }}
-    runs-on:
-      - runs-on=${{ github.run_id }}
-      - cpu=12
-      - ram=32
+    runs-on: self-hosted/cpu=2+8/ram=32/retry=when-interrupted/debug=true
     if: github.event.repository.owner.id == github.event.sender.id
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
