@@ -1,6 +1,9 @@
 # compile OrangeFox Recovery with Github Actions
 ```
-only Supports OrangeFox  (14.1 is not ready yet) / 12.1 / 11 
+only Supports OrangeFox  (14.1 is not ready yet) / 12.1 / 11
+**************
+*** WARNING***: the fox_14.1 branch is *EXPERIMENTAL*! Also, syncing will take a *VERY* long time
+**************
 ```
 ![cap_sprout](https://wiki.orangefox.tech/banner.svg)
 ---
